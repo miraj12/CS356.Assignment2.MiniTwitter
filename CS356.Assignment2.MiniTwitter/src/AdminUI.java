@@ -7,36 +7,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
+ * This class is the UI control panel for the admin user, 
+ * it uses singleton pattern.
+ * 
  * @author Miraj
  */
 public class AdminUI extends javax.swing.JFrame implements ActionListener{
-
+    // userTree displays users and groups in tree format
     private JTree userTree;
     private static AdminUI instance = null;
+    // variables to keep count of user and group, it does not consider root as group
     private int userCount = 0, groupCount = 0;
+    
+    // this hashsets has all the users and groups added so far, purpose is to 
+    // not allow duplicate user ids or group ids.
     private HashSet<String> users,groups;
-    /**
-     * Creates new form AdminUser
-     */
+    
     private AdminUI() {
         initComponents();
         initialize();
     }
-
+    //Lazy loading for singleton pattern
     public static AdminUI getInstance(){
         if(instance == null){
             instance = new AdminUI();
         }
         return instance;
     }
+    
+    /*
+    * This method initializes JTree with position and root node. It also addes
+    * listeners for total message feed and positive message percentage.
+    */
     private void initialize(){
         DefaultMutableTreeNode root = new Group("ROOT");
         
@@ -49,7 +53,7 @@ public class AdminUI extends javax.swing.JFrame implements ActionListener{
         groups.add("root");
         
         
-        
+        //total message button listener
         messageTotal.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -59,6 +63,7 @@ public class AdminUI extends javax.swing.JFrame implements ActionListener{
             }
         });
         
+        // positive message percentage button listener
         posPercentage.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e){
@@ -70,7 +75,11 @@ public class AdminUI extends javax.swing.JFrame implements ActionListener{
         });
         
     }
-    
+    /*
+    * This method performs action based on the button pressed such as add user,
+    * add group, and open user view. It also makes sure no duplicate user or group
+    * is added and also group cannot be added under user
+    */
     @Override
     public void actionPerformed(ActionEvent ae) {
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) userTree.getLastSelectedPathComponent();
@@ -167,28 +176,35 @@ public class AdminUI extends javax.swing.JFrame implements ActionListener{
         setTitle("Admin Control Panel");
 
         userId.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        userId.setToolTipText("Add userID");
 
         addUser.setText("Add User");
         addUser.addActionListener(this);
         addUser.setActionCommand("addUser");
 
         groupId.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        groupId.setToolTipText("Add groupId");
 
         addGroup.setText("Add Group");
         addGroup.addActionListener(this);
         addGroup.setActionCommand("addGroup");
 
         userView.setText("Open User View");
+        userView.setToolTipText("open user's panel");
         userView.addActionListener(this);
         userView.setActionCommand("viewUser");
 
         totalUser.setText("Total User");
+        totalUser.setToolTipText("display total user");
 
         groupTotal.setText("Total Group");
+        groupTotal.setToolTipText("display total group");
 
         messageTotal.setText("Total Message");
+        messageTotal.setToolTipText("display total messages");
 
         posPercentage.setText("Positive Percentage");
+        posPercentage.setToolTipText("positive messages percentage");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

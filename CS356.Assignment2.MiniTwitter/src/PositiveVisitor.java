@@ -1,20 +1,22 @@
 
 import javax.swing.JOptionPane;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
+ * This is PositiveVisitor class that displays positive message percentage
  * @author Miraj
  */
 public class PositiveVisitor  implements TwitterVisitor{
     
+    // counter for total messages and positive messages
     private int messageCounter = 0, posCounter = 0;
+    
+    // array of words that are considered positive
     private static final String[] positiveWords = {"good", "great","excellent"};
+    
+    /*
+    * visitUser method counts positive message by user
+    */
     @Override
     public void visitUser(TwittSubject node) {
         if(!(node instanceof User)){
@@ -33,6 +35,9 @@ public class PositiveVisitor  implements TwitterVisitor{
     
     }
 
+    /*
+    * displayResult is used to display positive message percentage in a dialog box
+    */
     @Override
     public void displayResult() {
         if(messageCounter == 0){

@@ -3,14 +3,9 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
+ * TwittSubject is abstract class allows observers to register and get updates.
  * @author Miraj
  */
 public abstract class TwittSubject extends DefaultMutableTreeNode implements Visitable {
@@ -21,11 +16,15 @@ public abstract class TwittSubject extends DefaultMutableTreeNode implements Vis
         super();
         followers = new LinkedList<>();
     }
-    
-    public void addObserver(TwittObserver ob){
+    /**
+     * attach adds observers/followers.
+     */
+    public void attach(TwittObserver ob){
         followers.add(ob);
     }
-    
+    /**
+     * notifyObserver notifies the observers/followers of user messages
+     */
     public void notifyObserver(){
         for(TwittObserver ob : followers){
             ob.update(this);

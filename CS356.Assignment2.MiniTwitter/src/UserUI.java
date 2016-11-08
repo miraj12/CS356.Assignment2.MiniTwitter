@@ -6,18 +6,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
+ * This is the User's control panel UI  implements TwittObserver and ActionListener
  * @author Miraj
  */
 public class UserUI extends javax.swing.JFrame implements ActionListener, TwittObserver {
-
+    
     private User user;
     private DefaultListModel<String> followingList, messageFeedList;
     
@@ -37,6 +31,9 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         postMessage.addActionListener(this);
     }
     
+    /**
+    *   sets the user frame visible
+    */
     public void setVisibility(boolean visible){
         if(visible){
             userId.setText("");
@@ -44,7 +41,9 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         }
         setVisible(true);
     }
-    
+    /**
+    * This method updates the following list and the message feed
+    */
     public void updateList(){
         followingList.clear();
         messageFeedList.clear();
@@ -57,6 +56,9 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         }
     }
     
+    /**
+    * This method is used to find user by the user id to follow.
+    */
     private User findUser(String userId){
         Enumeration<DefaultMutableTreeNode> n = ((DefaultMutableTreeNode) user.getRoot()).depthFirstEnumeration();
         while(n.hasMoreElements()){
@@ -67,7 +69,9 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         }
         return null;
     }
-    
+    /**
+    * This method is used to check if user is already following that user
+    */
     private boolean isFollowing(User check){
         if( (check == null) || check.getUserId().equals(user.getUserId()) ){
             return false;
@@ -81,6 +85,11 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
             return true;
         }
     }
+    
+    /**
+    * This method performs actions when buttons are pressed in the User's 
+    * control panel. Allows follow user and post message.
+    */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
@@ -93,8 +102,8 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
                     if(check){
                         user.addToFollowings(found.getUserId());
                         followingList.addElement(found.getUserId());
-                        found.addObserver(user);
-                        found.addObserver(this);
+                        found.attach(user);
+                        found.attach(this);
                     }
                     else{
                         JOptionPane.showMessageDialog(null, "No user found", 
@@ -125,6 +134,10 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         }
     }
 
+    /**
+    * This method is used to update the user's message feed when new message is
+    * sent.
+    */
     @Override
     public void update(TwittSubject subject) {
        if(subject instanceof User){
@@ -155,24 +168,28 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
         setTitle(user.getUserId() + " panel");
 
         userId.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        userId.setToolTipText("Follow user");
 
         followUser.setText("Follow User");
         followUser.setToolTipText("");
         followUser.setActionCommand("followUser");
 
         following.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        following.setToolTipText("Current Followings");
         jScrollPane1.setViewportView(following);
 
         tweetMessage.setColumns(20);
         tweetMessage.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
         tweetMessage.setLineWrap(true);
         tweetMessage.setRows(5);
+        tweetMessage.setToolTipText("Post message");
         jScrollPane2.setViewportView(tweetMessage);
 
         postMessage.setText("Post Message");
         postMessage.setActionCommand("postMessage");
 
         messageFeed.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        messageFeed.setToolTipText("Message feed");
         jScrollPane3.setViewportView(messageFeed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -182,17 +199,17 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane3)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(postMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(userId, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(followUser, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(postMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(userId, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(41, 41, 41)
+                            .addComponent(followUser, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -204,12 +221,12 @@ public class UserUI extends javax.swing.JFrame implements ActionListener, TwittO
                     .addComponent(followUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(postMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(postMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 

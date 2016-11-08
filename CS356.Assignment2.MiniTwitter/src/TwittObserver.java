@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 /**
- *
+ * This interface uses Observer pattern. It allows to update on notifyObserver 
+ * from subject.
  * @author Miraj
  */
 public interface TwittObserver {
